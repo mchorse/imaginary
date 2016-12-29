@@ -19,18 +19,21 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
  */
 public class RenderImage extends Render<EntityImage>
 {
+    /**
+     * Initiate this renderer with render manager 
+     */
     public RenderImage(RenderManager manager)
     {
         super(manager);
     }
 
     /**
-     * Such a waste of resources 
+     * Simply return image's picture 
      */
     @Override
     protected ResourceLocation getEntityTexture(EntityImage entity)
     {
-        return new ResourceLocation("imaginary.pictures", entity.picture + ".png");
+        return entity.picture;
     }
 
     /**
