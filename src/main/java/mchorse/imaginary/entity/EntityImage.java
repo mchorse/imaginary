@@ -1,10 +1,15 @@
 package mchorse.imaginary.entity;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.imaginary.GuiHandler;
+import mchorse.imaginary.network.Dispatcher;
+import mchorse.imaginary.network.common.PacketModifyImage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -56,8 +61,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
             this.height = height;
             this.deep = deep;
 
-            AxisAlignedBB box = this.getEntityBoundingBox();
-            this.setEntityBoundingBox(new AxisAlignedBB(box.minX, box.minY, box.minZ, box.minX + (double) this.width, box.minY + (double) this.height, box.minZ + (double) this.deep));
+            this.setEntityBoundingBox(new AxisAlignedBB(this.posX - width / 2, this.posY, this.posZ - deep / 2, this.posX + width / 2, this.posY + height, this.posZ + deep / 2));
         }
     }
 
@@ -126,12 +130,29 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     protected void entityInit()
     {}
 
+    @Override
+    public boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand)
+    {
+        GuiHandler.open(player, GuiHandler.PICTURE, this.getEntityId(), 0, 0);
+
+        return true;
+    }
+
     public void setPicture(String picture)
     {
         if (!picture.isEmpty())
         {
             this.picture = new ResourceLocation("imaginary.pictures", picture);
         }
+        else
+        {
+            this.picture = null;
+        }
+    }
+
+    public String getPicture()
+    {
+        return this.picture == null ? "" : this.picture.getResourcePath();
     }
 
     @Override
@@ -145,11 +166,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     @Override
     protected void writeEntityToNBT(NBTTagCompound compound)
     {
-        if (this.picture != null)
-        {
-            compound.setString("Picture", this.picture.getResourcePath());
-        }
-
+        compound.setString("Picture", this.getPicture());
         compound.setFloat("SizeW", this.sizeW);
         compound.setFloat("SizeH", this.sizeH);
     }
@@ -174,7 +191,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     @Override
     public void writeSpawnData(ByteBuf buffer)
     {
-        ByteBufUtils.writeUTF8String(buffer, this.picture == null ? "" : this.picture.getResourcePath());
+        ByteBufUtils.writeUTF8String(buffer, this.getPicture());
 
         buffer.writeFloat(this.sizeW);
         buffer.writeFloat(this.sizeH);
@@ -182,5 +199,15 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
         buffer.writeFloat(this.width);
         buffer.writeFloat(this.height);
         buffer.writeFloat(this.deep);
+    }
+
+    public void modify(String picture)
+    {
+        this.setPicture(picture);
+    }
+
+    public void notifyTrackers()
+    {
+        Dispatcher.sendToServer(new PacketModifyImage(this.getEntityId(), this.picture.getResourcePath()));
     }
 }

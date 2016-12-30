@@ -1,6 +1,9 @@
 package mchorse.imaginary.network;
 
 import mchorse.imaginary.Imaginary;
+import mchorse.imaginary.network.client.ClientHandlerModifyImage;
+import mchorse.imaginary.network.common.PacketModifyImage;
+import mchorse.imaginary.network.server.ServerHandlerModifyImage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +64,8 @@ public class Dispatcher
      */
     public static void register()
     {
-
+        register(PacketModifyImage.class, ClientHandlerModifyImage.class, Side.CLIENT);
+        register(PacketModifyImage.class, ServerHandlerModifyImage.class, Side.SERVER);
     }
 
     /**

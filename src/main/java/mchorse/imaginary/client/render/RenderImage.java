@@ -1,5 +1,6 @@
 package mchorse.imaginary.client.render;
 
+import mchorse.imaginary.ClientProxy;
 import mchorse.imaginary.entity.EntityImage;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -20,6 +21,8 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
  */
 public class RenderImage extends Render<EntityImage>
 {
+    public static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation("imaginary", "textures/items/image.png");
+
     /**
      * Initiate this renderer with render manager 
      */
@@ -29,12 +32,18 @@ public class RenderImage extends Render<EntityImage>
     }
 
     /**
-     * Simply return image's picture 
+     * If image entity's picture isn't null and it actually exist, then use 
+     * its picture, otherwise, use default one. 
      */
     @Override
     protected ResourceLocation getEntityTexture(EntityImage entity)
     {
-        return entity.picture;
+        if (entity.picture != null && ClientProxy.picturesPack.resourceExists(entity.picture))
+        {
+            return entity.picture;
+        }
+
+        return DEFAULT_TEXTURE;
     }
 
     /**
@@ -48,6 +57,7 @@ public class RenderImage extends Render<EntityImage>
         GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(180.0F - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
         GlStateManager.enableRescaleNormal();
+        GlStateManager.enableBlend();
         this.bindEntityTexture(entity);
 
         float f = 0.0625F;
@@ -61,6 +71,7 @@ public class RenderImage extends Render<EntityImage>
         this.renderImage(entity);
 
         GlStateManager.disableRescaleNormal();
+        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     }
 

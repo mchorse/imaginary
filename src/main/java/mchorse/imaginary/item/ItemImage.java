@@ -83,10 +83,9 @@ public class ItemImage extends Item
                 width = 0.1F;
             }
 
-            image.setPositionAndRotation(x, y, z, rx, ry);
             image.setSize(width, height, deep);
+            image.setPositionAndRotation(x, y, z, rx, ry);
 
-            image.setPicture("lol.png");
             worldIn.spawnEntityInWorld(image);
         }
 
