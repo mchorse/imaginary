@@ -1,5 +1,6 @@
 package mchorse.imaginary;
 
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -27,6 +28,8 @@ public class Imaginary
     public static CommonProxy proxy;
     @Mod.Instance
     public static Imaginary instance;
+
+    public static Item imageItem;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

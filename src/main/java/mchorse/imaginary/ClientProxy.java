@@ -7,7 +7,9 @@ import java.util.List;
 import mchorse.imaginary.client.PicturePack;
 import mchorse.imaginary.client.render.RenderImage;
 import mchorse.imaginary.entity.EntityImage;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -32,6 +34,8 @@ public class ClientProxy extends CommonProxy
     public void preLoad(FMLPreInitializationEvent event)
     {
         super.preLoad(event);
+
+        ModelLoader.setCustomModelResourceLocation(Imaginary.imageItem, 0, new ModelResourceLocation("imaginary:image", "inventory"));
 
         RenderingRegistry.registerEntityRenderingHandler(EntityImage.class, new RenderImage.ImageFactory());
 

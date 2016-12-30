@@ -1,9 +1,11 @@
 package mchorse.imaginary;
 
 import mchorse.imaginary.entity.EntityImage;
+import mchorse.imaginary.item.ItemImage;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Common imaginary proxy 
@@ -17,6 +19,8 @@ public class CommonProxy
      */
     public void preLoad(FMLPreInitializationEvent event)
     {
+        GameRegistry.register(Imaginary.imageItem = new ItemImage());
+
         EntityRegistry.registerModEntity(EntityImage.class, "Image", 0, Imaginary.instance, 128, 5, false);
     }
 

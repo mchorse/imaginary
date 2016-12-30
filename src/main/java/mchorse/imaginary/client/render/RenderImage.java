@@ -1,6 +1,7 @@
 package mchorse.imaginary.client.render;
 
 import mchorse.imaginary.entity.EntityImage;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -43,8 +44,9 @@ public class RenderImage extends Render<EntityImage>
     public void doRender(EntityImage entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y, z);
+        GlStateManager.translate(x, y + entity.height / 2, z);
         GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(180.0F - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
         GlStateManager.enableRescaleNormal();
         this.bindEntityTexture(entity);
 
@@ -65,19 +67,27 @@ public class RenderImage extends Render<EntityImage>
     /**
      * Render the image
      * 
-     * The code is partially taken from the {@link RenderPainting} class.
+     * The code is partially taken from the {@link RenderPainting} class or 
+     * maybe from {@link Gui#drawTexturedModalRect(int, int, int, int, int, int)},
+     * I don't know.
      */
     private void renderImage(EntityImage entity)
     {
-        double x1 = -5.0F;
-        double x2 = 5.0F;
-        double y1 = 5.0F;
-        double y2 = -5.0F;
+        float w = entity.sizeW * 16;
+        float h = entity.sizeH * 16;
+
+        double x1 = -w / 2;
+        double x2 = w / 2;
+        double y1 = -h / 2;
+        double y2 = h / 2;
 
         double u1 = 1.0F;
         double u2 = 0.0F;
         double v1 = 1.0F;
         double v2 = 0.0F;
+
+        float ry = (float) Math.sin(entity.rotationPitch);
+        float rz = (float) Math.cos(entity.rotationPitch + Math.PI);
 
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer vertexbuffer = tessellator.getBuffer();
@@ -85,10 +95,10 @@ public class RenderImage extends Render<EntityImage>
 
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
-        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).normal(0.0F, 0.0F, -1.0F).endVertex();
-        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).normal(0.0F, 0.0F, -1.0F).endVertex();
-        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).normal(0.0F, 0.0F, -1.0F).endVertex();
-        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).normal(0.0F, 0.0F, -1.0F).endVertex();
+        vertexbuffer.pos(x1, y2, 0).tex(u2, v1).normal(0.0F, ry, rz).endVertex();
+        vertexbuffer.pos(x2, y2, 0).tex(u1, v1).normal(0.0F, ry, rz).endVertex();
+        vertexbuffer.pos(x2, y1, 0).tex(u1, v2).normal(0.0F, ry, rz).endVertex();
+        vertexbuffer.pos(x1, y1, 0).tex(u2, v2).normal(0.0F, ry, rz).endVertex();
 
         tessellator.draw();
     }
