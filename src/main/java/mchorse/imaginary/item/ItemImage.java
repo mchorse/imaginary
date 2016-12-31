@@ -7,9 +7,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumFacing.Axis;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 /**
@@ -39,52 +39,35 @@ public class ItemImage extends Item
                 image.readFromNBT(stack.getTagCompound().getCompoundTag("ImageData"));
             }
 
-            Vec3i vec = facing.getDirectionVec();
-
-            float x = pos.getX() + 0.5F + ((float) vec.getX() * 1.01F) / 2;
-            float y = pos.getY() + ((float) vec.getY() * 1.01F) / 2;
-            float z = pos.getZ() + 0.5F + ((float) vec.getZ() * 1.01F) / 2;
-
-            float rx = facing.equals(EnumFacing.NORTH) ? 180.0F : 0.0F;
+            float rx = 0.0F;
             float ry = 0.0F;
 
-            float width = 1.0F;
-            float height = 1.0F;
-            float deep = 0.1F;
-
-            if (facing.equals(EnumFacing.DOWN))
+            if (facing == EnumFacing.DOWN || facing == EnumFacing.UP)
             {
-                ry = 90.0F;
-                y += 0.45F;
-
-                deep = 1.0F;
-                height = 0.1F;
+                ry = facing == EnumFacing.DOWN ? 90.0F : -90.0F;
             }
-            else if (facing.equals(EnumFacing.UP))
+            else if (facing == EnumFacing.WEST || facing == EnumFacing.EAST)
             {
-                ry = -90.0F;
-                y += 0.45F;
-
-                deep = 1.0F;
-                height = 0.1F;
+                rx = facing == EnumFacing.WEST ? 90.0F : -90.0F;
             }
-            else if (facing.equals(EnumFacing.EAST))
+            else if (facing == EnumFacing.NORTH)
             {
-                rx = -90;
-
-                deep = 1.0F;
-                width = 0.1F;
-            }
-            else if (facing.equals(EnumFacing.WEST))
-            {
-                rx = 90;
-
-                deep = 1.0F;
-                width = 0.1F;
+                rx = 180.0F;
             }
 
-            image.setSize(width, height, deep);
-            image.setPositionAndRotation(x, y, z, rx, ry);
+            image.facing = facing;
+            image.blockPos = pos;
+
+            if (facing.getAxis() == Axis.Y)
+            {
+                float rz = (float) Math.floor((-playerIn.rotationYaw + 180 + 45.0F) / 90.0F);
+
+                image.rotationRoll = rz * 90;
+            }
+
+            image.rotationYaw = image.prevRotationYaw = rx;
+            image.rotationPitch = image.prevRotationPitch = ry;
+            image.updatePosition();
 
             worldIn.spawnEntityInWorld(image);
         }

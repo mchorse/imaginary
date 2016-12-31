@@ -53,9 +53,10 @@ public class RenderImage extends Render<EntityImage>
     public void doRender(EntityImage entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x, y + entity.height / 2, z);
+        GlStateManager.translate(x, y, z);
         GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(180.0F - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(entity.rotationRoll, 0.0F, 0.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();
         this.bindEntityTexture(entity);
