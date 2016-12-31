@@ -117,11 +117,13 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     {}
 
     /**
-     * Modify this entity (more arguments coming soon) 
+     * Modify this entity (more arguments coming soon)
      */
-    public void modify(String picture)
+    public void modify(String picture, float width, float height)
     {
         this.setPicture(picture);
+        this.sizeW = width;
+        this.sizeH = height;
     }
 
     /**
@@ -129,7 +131,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
      */
     public void notifyTrackers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyImage(this.getEntityId(), this.getPicture()));
+        Dispatcher.sendToTracked(this, new PacketModifyImage(this.getEntityId(), this.getPicture(), this.sizeW, this.sizeH));
     }
 
     /**

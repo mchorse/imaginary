@@ -8,14 +8,18 @@ public class PacketModifyImage implements IMessage
 {
     public int id;
     public String picture;
+    public float width;
+    public float height;
 
     public PacketModifyImage()
     {}
 
-    public PacketModifyImage(int id, String picture)
+    public PacketModifyImage(int id, String picture, float width, float height)
     {
         this.id = id;
         this.picture = picture;
+        this.width = width;
+        this.height = height;
     }
 
     @Override
@@ -23,6 +27,8 @@ public class PacketModifyImage implements IMessage
     {
         this.id = buf.readInt();
         this.picture = ByteBufUtils.readUTF8String(buf);
+        this.width = buf.readFloat();
+        this.height = buf.readFloat();
     }
 
     @Override
@@ -30,5 +36,7 @@ public class PacketModifyImage implements IMessage
     {
         buf.writeInt(this.id);
         ByteBufUtils.writeUTF8String(buf, this.picture);
+        buf.writeFloat(this.width);
+        buf.writeFloat(this.height);
     }
 }

@@ -46,7 +46,7 @@ public class GuiPictures extends GuiScreen
     public GuiPictures(String current)
     {
         this.images.add(new ImageInfo("", RenderImage.DEFAULT_TEXTURE, new Dimension(16, 16)));
-        int i = 0;
+        int i = 1;
 
         for (File file : ClientProxy.picturesPack.pictures.listFiles())
         {
@@ -71,6 +71,39 @@ public class GuiPictures extends GuiScreen
                     e.printStackTrace();
                 }
             }
+        }
+    }
+
+    /**
+     * Get selected image's info
+     */
+    public ImageInfo getSelected()
+    {
+        if (this.selected >= 0 && this.selected < this.images.size())
+        {
+            return this.images.get(this.selected);
+        }
+
+        return this.images.get(0);
+    }
+
+    /**
+     * Set selected image 
+     */
+    public void setSelected(String picture)
+    {
+        int i = 0;
+
+        for (ImageInfo info : this.images)
+        {
+            if (info.filename.equals(picture))
+            {
+                this.selected = i;
+
+                break;
+            }
+
+            i++;
         }
     }
 
