@@ -71,7 +71,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         this.sizeW = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 30, w, 18);
         this.sizeH = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 55, w, 18);
 
-        this.save = new GuiButton(0, this.width - 90, this.height - 30, 80, 20, "Save");
+        this.save = new GuiButton(0, this.width - 125, this.height - 30, 115, 20, "Save");
         this.pick = new GuiButton(1, 10, 132, 100, 20, "Pick picture...");
         this.aspect = new GuiButton(2, this.width - 90, 4, 80, 20, "Keep Aspect");
 
@@ -226,7 +226,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         this.sizeH.drawTextBox();
 
         this.fontRendererObj.drawStringWithShadow("Width", this.width - 45, 35, 0xff888888);
-        this.fontRendererObj.drawStringWithShadow("Height", this.width - 45, 57, 0xff888888);
+        this.fontRendererObj.drawStringWithShadow("Height", this.width - 45, 60, 0xff888888);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 

@@ -35,8 +35,7 @@ public abstract class GuiScrollPane extends GuiScreen
     protected int scrollY = 0;
     protected int scrollHeight = 0;
 
-    // TODO: protected
-    private boolean dragging = false;
+    protected boolean dragging = false;
     protected boolean hidden = false;
 
     public void updateRect(int x, int y, int w, int h)

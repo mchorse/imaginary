@@ -119,7 +119,7 @@ public class GuiPictures extends GuiScrollPane
         boolean xOut = mouseX < this.x + 2 || mouseX > this.x + this.w - 2;
         boolean yOut = mouseY < this.y + 2 || mouseY > this.y + this.h - 2;
 
-        if (xOut || yOut)
+        if (xOut || yOut || this.dragging)
         {
             return;
         }
