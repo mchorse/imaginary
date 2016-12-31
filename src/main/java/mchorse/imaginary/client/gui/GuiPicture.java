@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Picture configuration GUI 
@@ -21,11 +22,12 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
 {
     /* GUI text fields */
     public GuiButton save;
+    public GuiButton pick;
     public GuiButton aspect;
+
     public GuiTextField sizeW;
     public GuiTextField sizeH;
 
-    public GuiTextField picture;
     public GuiPictures picker;
 
     /* Image entity */
@@ -53,35 +55,46 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
     @Override
     public void pickPicture(GuiPictures gui, String filename)
     {
-        if (!picture.getText().equals(filename))
+        if (!this.entity.getPicture().equals(filename))
         {
-            this.picture.setText(filename);
             this.entity.setPicture(filename);
+            this.picker.setHidden(true);
         }
     }
 
     @Override
     public void initGui()
     {
-        int w = (this.width - 20 - 100) / 2;
+        int w = 113;
 
-        this.picture = new GuiTextField(0, fontRendererObj, 11, this.height - 10 - 19, this.width - 22 - 100, 18);
-        this.sizeW = new GuiTextField(0, fontRendererObj, 11, 11, w, 18);
-        this.sizeH = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 11, w, 18);
+        /* Initializing GUI fields */
+        this.sizeW = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 30, w, 18);
+        this.sizeH = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 55, w, 18);
 
-        this.save = new GuiButton(0, this.width - 100, this.height - 30, 90, 20, "Save");
-        this.aspect = new GuiButton(1, this.width / 2 - 40, 10, 80, 20, "Keep Aspect");
+        this.save = new GuiButton(0, this.width - 90, this.height - 30, 80, 20, "Save");
+        this.pick = new GuiButton(1, 10, 132, 100, 20, "Pick picture...");
+        this.aspect = new GuiButton(2, this.width - 90, 4, 80, 20, "Keep Aspect");
 
+        /* Adding buttons */
+        this.buttonList.add(this.save);
+        this.buttonList.add(this.pick);
+        this.buttonList.add(this.aspect);
+
+        /* Configuring up the fields */
         this.sizeW.setText(Float.toString(this.entity.sizeW));
         this.sizeH.setText(Float.toString(this.entity.sizeH));
 
-        this.buttonList.add(this.save);
-        this.buttonList.add(this.aspect);
-
         this.picker.x = 10;
-        this.picker.y = 40;
-        this.picker.w = this.width - 20;
-        this.picker.h = this.height - 40 - 40;
+        this.picker.y = 154;
+        this.picker.w = ((this.width - 10) / 2);
+        this.picker.w -= this.picker.w % 42;
+        this.picker.w += 10;
+        this.picker.h = this.height - 154 - 10;
+
+        int cap = (this.picker.w - 2) / 42;
+
+        this.picker.scrollHeight = this.picker.images.size() / cap * 42;
+        this.picker.hidden = true;
     }
 
     @Override
@@ -103,6 +116,10 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         }
         else if (button.id == 1)
         {
+            this.picker.setHidden(false);
+        }
+        else if (button.id == 2)
+        {
             this.keepAspect = !this.keepAspect;
             button.displayString = this.keepAspect ? "Keep Aspect" : "Custom Size";
         }
@@ -110,32 +127,15 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
 
     private void saveAndQuit()
     {
-        float w = this.oldSizeW;
-        float h = this.oldSizeH;
-
-        try
-        {
-            w = Float.parseFloat(this.sizeW.getText());
-        }
-        catch (NumberFormatException e)
-        {}
-
-        try
-        {
-            h = Float.parseFloat(this.sizeH.getText());
-        }
-        catch (NumberFormatException e)
-        {}
-
-        Dispatcher.sendToServer(new PacketModifyImage(this.entity.getEntityId(), this.entity.getPicture(), w, h));
+        Dispatcher.sendToServer(new PacketModifyImage(this.entity));
         this.mc.displayGuiScreen(null);
     }
 
     @Override
     public void handleMouseInput() throws IOException
     {
-        super.handleMouseInput();
         this.picker.handleMouseInput();
+        super.handleMouseInput();
     }
 
     @Override
@@ -148,15 +148,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
             this.entity.sizeH = this.oldSizeH;
         }
 
-        this.picture.textboxKeyTyped(typedChar, keyCode);
         this.sizeW.textboxKeyTyped(typedChar, keyCode);
         this.sizeH.textboxKeyTyped(typedChar, keyCode);
-
-        if (this.picture.isFocused())
-        {
-            this.entity.setPicture(this.picture.getText());
-            this.picker.setSelected(this.picture.getText());
-        }
 
         if (this.sizeW.isFocused())
         {
@@ -200,11 +193,13 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (!this.picker.isInside(mouseX, mouseY))
+        {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        this.picture.mouseClicked(mouseX, mouseY, mouseButton);
-        this.sizeW.mouseClicked(mouseX, mouseY, mouseButton);
-        this.sizeH.mouseClicked(mouseX, mouseY, mouseButton);
+            this.sizeW.mouseClicked(mouseX, mouseY, mouseButton);
+            this.sizeH.mouseClicked(mouseX, mouseY, mouseButton);
+        }
     }
 
     /* Rendering */
@@ -218,15 +213,24 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
         Gui.drawRect(0, 0, this.width, this.height, 0x88000000);
+        this.fontRendererObj.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
+        this.fontRendererObj.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
 
-        /* Draw picker */
-        this.picker.drawScreen(mouseX, mouseY, partialTicks);
+        /* Draw picture */
+        Gui.drawRect(10, 30, 110, 130, 0xff000000);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GuiPictures.drawPicture(this.picker.getSelected(), 10, 30, this.zLevel + 1, 100, 100);
 
         /* Draw GUI fields */
-        this.picture.drawTextBox();
         this.sizeW.drawTextBox();
         this.sizeH.drawTextBox();
 
+        this.fontRendererObj.drawStringWithShadow("Width", this.width - 45, 35, 0xff888888);
+        this.fontRendererObj.drawStringWithShadow("Height", this.width - 45, 57, 0xff888888);
+
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        /* Draw picker */
+        this.picker.drawScreen(mouseX, mouseY, partialTicks);
     }
 }

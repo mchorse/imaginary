@@ -1,6 +1,7 @@
 package mchorse.imaginary.network.common;
 
 import io.netty.buffer.ByteBuf;
+import mchorse.imaginary.entity.EntityImage;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -20,6 +21,11 @@ public class PacketModifyImage implements IMessage
         this.picture = picture;
         this.width = width;
         this.height = height;
+    }
+
+    public PacketModifyImage(EntityImage image)
+    {
+        this(image.getEntityId(), image.getPicture(), image.sizeW, image.sizeH);
     }
 
     @Override

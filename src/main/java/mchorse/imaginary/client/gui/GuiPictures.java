@@ -12,7 +12,6 @@ import mchorse.imaginary.ClientProxy;
 import mchorse.imaginary.ImageUtils;
 import mchorse.imaginary.client.render.RenderImage;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -25,18 +24,12 @@ import net.minecraft.util.math.MathHelper;
  * 
  * This class is responsible for displaying pictures and then 
  */
-public class GuiPictures extends GuiScreen
+public class GuiPictures extends GuiScrollPane
 {
     /* Other stuff */
     public List<ImageInfo> images = new ArrayList<ImageInfo>();
     public IPicturePicker listener;
     public int selected = -1;
-
-    /* Space information */
-    public int x;
-    public int y;
-    public int w;
-    public int h;
 
     /** 
      * Initiate this GUI container
@@ -47,6 +40,11 @@ public class GuiPictures extends GuiScreen
     {
         this.images.add(new ImageInfo("", RenderImage.DEFAULT_TEXTURE, new Dimension(16, 16)));
         int i = 1;
+
+        if (current.isEmpty())
+        {
+            this.selected = 0;
+        }
 
         for (File file : ClientProxy.picturesPack.pictures.listFiles())
         {
@@ -116,6 +114,8 @@ public class GuiPictures extends GuiScreen
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+
         boolean xOut = mouseX < this.x + 2 || mouseX > this.x + this.w - 2;
         boolean yOut = mouseY < this.y + 2 || mouseY > this.y + this.h - 2;
 
@@ -127,11 +127,9 @@ public class GuiPictures extends GuiScreen
         int cap = (this.w - 2) / 42;
 
         int x = MathHelper.clamp_int((mouseX - this.x - 2) / 42, 0, cap - 1);
-        int y = (mouseY - this.y - 2) / 42;
+        int y = (mouseY + this.scrollY - this.y - 2) / 42;
 
         int index = x + y * cap;
-
-        System.out.println(index);
 
         if (index < 0 || index >= this.images.size())
         {
@@ -145,11 +143,8 @@ public class GuiPictures extends GuiScreen
         }
     }
 
-    /**
-     * Draw the thing 
-     */
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
+    protected void drawPane()
     {
         GlStateManager.enableBlend();
 
@@ -163,8 +158,7 @@ public class GuiPictures extends GuiScreen
             int y = this.y + (i / cap) * 42 + 2;
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, i == this.selected ? 0.5F : 1.0F);
-            Minecraft.getMinecraft().renderEngine.bindTexture(image.texture);
-            this.drawPicture(image, x, y, 40, 40);
+            drawPicture(image, x, y, this.zLevel, 40, 40);
         }
 
         GlStateManager.disableBlend();
@@ -177,8 +171,10 @@ public class GuiPictures extends GuiScreen
      * but also for aligning and resizing pictures with non square aspect ratio 
      * correctly.
      */
-    public void drawPicture(ImageInfo image, int x, int y, int width, int height)
+    public static void drawPicture(ImageInfo image, int x, int y, float z, int width, int height)
     {
+        Minecraft.getMinecraft().renderEngine.bindTexture(image.texture);
+
         if (image.size.width != image.size.height)
         {
             int diff = image.size.width - image.size.height;
@@ -200,10 +196,10 @@ public class GuiPictures extends GuiScreen
         VertexBuffer buffer = tessellator.getBuffer();
 
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        buffer.pos(x, y + height, this.zLevel).tex(0, 1).endVertex();
-        buffer.pos(x + width, y + height, this.zLevel).tex(1, 1).endVertex();
-        buffer.pos(x + width, y, this.zLevel).tex(1, 0).endVertex();
-        buffer.pos(x, y, this.zLevel).tex(0, 0).endVertex();
+        buffer.pos(x, y + height, z).tex(0, 1).endVertex();
+        buffer.pos(x + width, y + height, z).tex(1, 1).endVertex();
+        buffer.pos(x + width, y, z).tex(1, 0).endVertex();
+        buffer.pos(x, y, z).tex(0, 0).endVertex();
 
         tessellator.draw();
     }

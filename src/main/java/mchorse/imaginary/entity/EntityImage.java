@@ -131,7 +131,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
      */
     public void notifyTrackers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyImage(this.getEntityId(), this.getPicture(), this.sizeW, this.sizeH));
+        Dispatcher.sendToTracked(this, new PacketModifyImage(this));
     }
 
     /**
