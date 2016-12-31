@@ -8,24 +8,36 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 public class PacketModifyImage implements IMessage
 {
     public int id;
+
     public String picture;
+
     public float width;
     public float height;
+
+    public float shiftX;
+    public float shiftY;
+    public float shiftZ;
 
     public PacketModifyImage()
     {}
 
-    public PacketModifyImage(int id, String picture, float width, float height)
+    public PacketModifyImage(int id, String picture, float width, float height, float shiftX, float shiftY, float shiftZ)
     {
         this.id = id;
+
         this.picture = picture;
+
         this.width = width;
         this.height = height;
+
+        this.shiftX = shiftX;
+        this.shiftY = shiftY;
+        this.shiftZ = shiftZ;
     }
 
     public PacketModifyImage(EntityImage image)
     {
-        this(image.getEntityId(), image.getPicture(), image.sizeW, image.sizeH);
+        this(image.getEntityId(), image.getPicture(), image.sizeW, image.sizeH, image.shiftX, image.shiftY, image.shiftZ);
     }
 
     @Override
@@ -35,6 +47,9 @@ public class PacketModifyImage implements IMessage
         this.picture = ByteBufUtils.readUTF8String(buf);
         this.width = buf.readFloat();
         this.height = buf.readFloat();
+        this.shiftX = buf.readFloat();
+        this.shiftY = buf.readFloat();
+        this.shiftZ = buf.readFloat();
     }
 
     @Override
@@ -44,5 +59,8 @@ public class PacketModifyImage implements IMessage
         ByteBufUtils.writeUTF8String(buf, this.picture);
         buf.writeFloat(this.width);
         buf.writeFloat(this.height);
+        buf.writeFloat(this.shiftX);
+        buf.writeFloat(this.shiftY);
+        buf.writeFloat(this.shiftZ);
     }
 }

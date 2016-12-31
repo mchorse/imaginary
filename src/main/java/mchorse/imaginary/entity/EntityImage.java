@@ -119,11 +119,18 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     /**
      * Modify this entity (more arguments coming soon)
      */
-    public void modify(String picture, float width, float height)
+    public void modify(String picture, float width, float height, float shiftX, float shiftY, float shiftZ)
     {
         this.setPicture(picture);
+
         this.sizeW = width;
         this.sizeH = height;
+
+        this.shiftX = shiftX;
+        this.shiftY = shiftY;
+        this.shiftZ = shiftZ;
+
+        this.updatePosition();
     }
 
     /**
@@ -209,6 +216,8 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
         }
 
         this.setEntityBoundingBox(new AxisAlignedBB(x - w / 2, y - h / 2, z - d / 2, x + w / 2, y + h / 2, z + d / 2));
+
+        System.out.println(this.worldObj.isRemote + " " + this.posX + " " + this.posY + " " + this.posZ);
     }
 
     /* Persisting and restoring this entity */

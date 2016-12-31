@@ -12,13 +12,15 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.client.config.GuiSlider;
+import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 
 /**
  * Picture configuration GUI 
  *
  * This GUI is responsible for configuring given image entity. 
  */
-public class GuiPicture extends GuiScreen implements IPicturePicker
+public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
 {
     /* GUI text fields */
     public GuiButton save;
@@ -27,6 +29,10 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
 
     public GuiTextField sizeW;
     public GuiTextField sizeH;
+
+    public GuiSlider shiftX;
+    public GuiSlider shiftY;
+    public GuiSlider shiftZ;
 
     public GuiPictures picker;
 
@@ -37,6 +43,9 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
     public String oldPicture;
     public float oldSizeW;
     public float oldSizeH;
+    public float oldShiftX;
+    public float oldShiftY;
+    public float oldShiftZ;
 
     boolean keepAspect = true;
 
@@ -47,6 +56,9 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         this.oldPicture = entity.getPicture();
         this.oldSizeW = entity.sizeW;
         this.oldSizeH = entity.sizeH;
+        this.oldShiftX = entity.shiftX;
+        this.oldShiftY = entity.shiftY;
+        this.oldShiftZ = entity.shiftZ;
 
         this.picker = new GuiPictures(this.oldPicture);
         this.picker.listener = this;
@@ -63,6 +75,18 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
     }
 
     @Override
+    public void onChangeSliderValue(GuiSlider slider)
+    {
+        this.entity.shiftX = (float) this.shiftX.getValue();
+        this.entity.shiftY = (float) this.shiftY.getValue();
+        this.entity.shiftZ = (float) this.shiftZ.getValue();
+        this.entity.updatePosition();
+        this.entity.prevPosX = this.entity.lastTickPosX = this.entity.posX;
+        this.entity.prevPosY = this.entity.lastTickPosY = this.entity.posY;
+        this.entity.prevPosZ = this.entity.lastTickPosZ = this.entity.posZ;
+    }
+
+    @Override
     public void initGui()
     {
         int w = 113;
@@ -70,6 +94,10 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         /* Initializing GUI fields */
         this.sizeW = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 30, w, 18);
         this.sizeH = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 55, w, 18);
+
+        this.shiftX = new GuiSlider(-1, this.width - 125, 100, "X: ", -1, 1, this.oldShiftX, this);
+        this.shiftY = new GuiSlider(-1, this.width - 125, 125, "Y: ", -1, 1, this.oldShiftY, this);
+        this.shiftZ = new GuiSlider(-1, this.width - 125, 150, "Z: ", -1, 1, this.oldShiftZ, this);
 
         this.save = new GuiButton(0, this.width - 125, this.height - 30, 115, 20, "Save");
         this.pick = new GuiButton(1, 10, 132, 100, 20, "Pick picture...");
@@ -80,9 +108,16 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         this.buttonList.add(this.pick);
         this.buttonList.add(this.aspect);
 
+        this.buttonList.add(this.shiftX);
+        this.buttonList.add(this.shiftY);
+        this.buttonList.add(this.shiftZ);
+
         /* Configuring up the fields */
         this.sizeW.setText(Float.toString(this.entity.sizeW));
         this.sizeH.setText(Float.toString(this.entity.sizeH));
+
+        this.shiftX.width = this.shiftY.width = this.shiftZ.width = 115;
+        this.shiftX.precision = this.shiftY.precision = this.shiftZ.precision = 2;
 
         this.picker.x = 10;
         this.picker.y = 154;
@@ -146,6 +181,9 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
             this.entity.setPicture(this.oldPicture);
             this.entity.sizeW = this.oldSizeW;
             this.entity.sizeH = this.oldSizeH;
+            this.entity.shiftX = this.oldShiftX;
+            this.entity.shiftY = this.oldShiftY;
+            this.entity.shiftZ = this.oldShiftZ;
         }
 
         this.sizeW.textboxKeyTyped(typedChar, keyCode);
@@ -215,6 +253,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         Gui.drawRect(0, 0, this.width, this.height, 0x88000000);
         this.fontRendererObj.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
         this.fontRendererObj.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
+        this.fontRendererObj.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
 
         /* Draw picture */
         Gui.drawRect(10, 30, 110, 130, 0xff000000);
@@ -225,7 +264,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker
         this.sizeW.drawTextBox();
         this.sizeH.drawTextBox();
 
-        this.fontRendererObj.drawStringWithShadow("Width", this.width - 45, 35, 0xff888888);
+        this.fontRendererObj.drawStringWithShadow("Width", this.width - 39, 35, 0xff888888);
         this.fontRendererObj.drawStringWithShadow("Height", this.width - 45, 60, 0xff888888);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
