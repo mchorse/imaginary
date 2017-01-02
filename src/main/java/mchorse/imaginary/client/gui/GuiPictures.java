@@ -157,13 +157,13 @@ public class GuiPictures extends GuiScrollPane
 
         int cap = (this.w - 2) / 42;
 
-        for (int i = 0, c = this.images.size(); i < c; i++)
+        for (int i = this.scrollY / 42, c = MathHelper.clamp_int((this.scrollY + this.h + 42) / 42 * cap, 0, this.images.size()); i < c; i++)
         {
             ImageInfo image = this.images.get(i);
 
             int x = this.x + (i % cap) * 42 + 2;
             int y = this.y + (i / cap) * 42 + 2;
-            
+
             GlStateManager.color(1.0F, 1.0F, 1.0F, i == this.selected ? 0.5F : 1.0F);
             drawPicture(image, x, y, this.zLevel, 40, 40);
         }
