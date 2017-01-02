@@ -15,6 +15,7 @@ import mchorse.imaginary.ClientProxy;
 import mchorse.imaginary.ImageUtils;
 import mchorse.imaginary.client.render.RenderImage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
@@ -151,7 +152,7 @@ public class GuiPictures extends GuiScrollPane
     }
 
     @Override
-    protected void drawPane()
+    protected void drawPane(int mouseX, int mouseY, float partialTicks)
     {
         GlStateManager.enableBlend();
 
@@ -163,9 +164,24 @@ public class GuiPictures extends GuiScrollPane
 
             int x = this.x + (i % cap) * 42 + 2;
             int y = this.y + (i / cap) * 42 + 2;
+            boolean isHovered = mouseX >= x && mouseX <= x + 40 && mouseY + this.scrollY >= y && mouseY + this.scrollY <= y + 40;
+            float opacity = i == this.selected ? 0.5F : 1.0F;
 
-            GlStateManager.color(1.0F, 1.0F, 1.0F, i == this.selected ? 0.5F : 1.0F);
+            if (isHovered)
+            {
+                opacity *= 0.5F;
+            }
+
+            GlStateManager.color(1.0F, 1.0F, 1.0F, opacity);
             drawPicture(image, x, y, this.zLevel, 40, 40);
+
+            if (isHovered)
+            {
+                Gui.drawRect(x, y, x + 40, y + 1, 0xFFFFFFFF);
+                Gui.drawRect(x, y, x + 1, y + 40, 0xFFFFFFFF);
+                Gui.drawRect(x + 39, y, x + 40, y + 40, 0xFFFFFFFF);
+                Gui.drawRect(x, y + 40, x + 40, y + 39, 0xFFFFFFFF);
+            }
         }
 
         GlStateManager.disableBlend();

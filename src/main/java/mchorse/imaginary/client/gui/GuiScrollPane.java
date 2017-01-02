@@ -123,7 +123,7 @@ public abstract class GuiScrollPane extends GuiScreen
 
     /* Drawing methods */
 
-    protected abstract void drawPane();
+    protected abstract void drawPane(int mouseX, int mouseY, float partialTicks);
 
     /**
      * Draw the background of the scroll pane
@@ -186,7 +186,7 @@ public abstract class GuiScrollPane extends GuiScreen
         GL11.glScissor(x, y, w, h);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-        this.drawPane();
+        this.drawPane(mouseX, mouseY, partialTicks);
         super.drawScreen(mouseX, mouseY + this.scrollY, partialTicks);
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
