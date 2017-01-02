@@ -18,10 +18,12 @@ public class PacketModifyImage implements IMessage
     public float shiftY;
     public float shiftZ;
 
+    public boolean fitAABB;
+
     public PacketModifyImage()
     {}
 
-    public PacketModifyImage(int id, String picture, float width, float height, float shiftX, float shiftY, float shiftZ)
+    public PacketModifyImage(int id, String picture, float width, float height, float shiftX, float shiftY, float shiftZ, boolean fitAABB)
     {
         this.id = id;
 
@@ -33,11 +35,13 @@ public class PacketModifyImage implements IMessage
         this.shiftX = shiftX;
         this.shiftY = shiftY;
         this.shiftZ = shiftZ;
+
+        this.fitAABB = fitAABB;
     }
 
     public PacketModifyImage(EntityImage image)
     {
-        this(image.getEntityId(), image.getPicture(), image.sizeW, image.sizeH, image.shiftX, image.shiftY, image.shiftZ);
+        this(image.getEntityId(), image.getPicture(), image.sizeW, image.sizeH, image.shiftX, image.shiftY, image.shiftZ, image.fitAABB);
     }
 
     @Override
@@ -50,6 +54,7 @@ public class PacketModifyImage implements IMessage
         this.shiftX = buf.readFloat();
         this.shiftY = buf.readFloat();
         this.shiftZ = buf.readFloat();
+        this.fitAABB = buf.readBoolean();
     }
 
     @Override
@@ -62,5 +67,6 @@ public class PacketModifyImage implements IMessage
         buf.writeFloat(this.shiftX);
         buf.writeFloat(this.shiftY);
         buf.writeFloat(this.shiftZ);
+        buf.writeBoolean(this.fitAABB);
     }
 }

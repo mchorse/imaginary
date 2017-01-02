@@ -11,6 +11,6 @@ public class ClientHandlerModifyImage extends ClientMessageHandler<PacketModifyI
     {
         EntityImage image = (EntityImage) player.worldObj.getEntityByID(message.id);
 
-        image.modify(message.picture, message.width, message.height, message.shiftX, message.shiftY, message.shiftZ);
+        image.modify(message.picture, message.width, message.height, message.shiftX, message.shiftY, message.shiftZ, message.fitAABB);
     }
 }

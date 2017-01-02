@@ -26,6 +26,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     public GuiButton save;
     public GuiButton pick;
     public GuiButton aspect;
+    public GuiButton fit;
 
     public GuiTextField sizeW;
     public GuiTextField sizeH;
@@ -46,6 +47,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     public float oldShiftX;
     public float oldShiftY;
     public float oldShiftZ;
+    public boolean oldFitAABB;
 
     boolean keepAspect = true;
 
@@ -59,6 +61,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.oldShiftX = entity.shiftX;
         this.oldShiftY = entity.shiftY;
         this.oldShiftZ = entity.shiftZ;
+        this.oldFitAABB = entity.fitAABB;
 
         this.picker = new GuiPictures(this.oldPicture);
         this.picker.listener = this;
@@ -80,10 +83,11 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.entity.shiftX = (float) this.shiftX.getValue();
         this.entity.shiftY = (float) this.shiftY.getValue();
         this.entity.shiftZ = (float) this.shiftZ.getValue();
-        this.entity.updatePosition();
+
         this.entity.prevPosX = this.entity.lastTickPosX = this.entity.posX;
         this.entity.prevPosY = this.entity.lastTickPosY = this.entity.posY;
         this.entity.prevPosZ = this.entity.lastTickPosZ = this.entity.posZ;
+        this.entity.updatePosition();
     }
 
     @Override
@@ -102,11 +106,13 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.save = new GuiButton(0, this.width - 125, this.height - 30, 115, 20, "Save");
         this.pick = new GuiButton(1, 10, 132, 100, 20, "Pick picture...");
         this.aspect = new GuiButton(2, this.width - 90, 4, 80, 20, "Keep Aspect");
+        this.fit = new GuiButton(3, this.width - 125, 180, 115, 20, "");
 
         /* Adding buttons */
         this.buttonList.add(this.save);
         this.buttonList.add(this.pick);
         this.buttonList.add(this.aspect);
+        this.buttonList.add(this.fit);
 
         this.buttonList.add(this.shiftX);
         this.buttonList.add(this.shiftY);
@@ -115,6 +121,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         /* Configuring up the fields */
         this.sizeW.setText(Float.toString(this.entity.sizeW));
         this.sizeH.setText(Float.toString(this.entity.sizeH));
+        this.fit.displayString = this.entity.fitAABB ? "Fit within AABB: Yes" : "Fit within AABB: No";
 
         this.shiftX.width = this.shiftY.width = this.shiftZ.width = 115;
         this.shiftX.precision = this.shiftY.precision = this.shiftZ.precision = 2;
@@ -156,6 +163,12 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
             this.keepAspect = !this.keepAspect;
             button.displayString = this.keepAspect ? "Keep Aspect" : "Custom Size";
         }
+        else if (button.id == 3)
+        {
+            this.entity.fitAABB = !this.entity.fitAABB;
+            this.fit.displayString = this.entity.fitAABB ? "Fit within AABB: Yes" : "Fit within AABB: No";
+            this.entity.updatePosition();
+        }
     }
 
     private void saveAndQuit()
@@ -182,6 +195,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
             this.entity.shiftX = this.oldShiftX;
             this.entity.shiftY = this.oldShiftY;
             this.entity.shiftZ = this.oldShiftZ;
+            this.entity.fitAABB = this.oldFitAABB;
         }
 
         this.sizeW.textboxKeyTyped(typedChar, keyCode);
@@ -200,6 +214,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
                     this.entity.sizeH = (float) info.size.height / (float) info.size.width * this.entity.sizeW;
                     this.sizeH.setText(Float.toString(this.entity.sizeH));
                 }
+
+                this.entity.updatePosition();
             }
             catch (NumberFormatException e)
             {}
@@ -218,6 +234,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
                     this.entity.sizeW = (float) info.size.width / (float) info.size.height * this.entity.sizeH;
                     this.sizeW.setText(Float.toString(this.entity.sizeW));
                 }
+
+                this.entity.updatePosition();
             }
             catch (NumberFormatException e)
             {}

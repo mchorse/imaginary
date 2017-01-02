@@ -59,6 +59,12 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     public float shiftZ = 0;
 
     /**
+     * Fit AABB within given size. This is useful only for rendering, since when 
+     * an entity's AABB out of sight, it doesn't gets rendered.
+     */
+    public boolean fitAABB = false;
+
+    /**
      * Rotation roll (useful for facing DOWN and UP) 
      */
     public float rotationRoll;
@@ -119,7 +125,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     /**
      * Modify this entity (more arguments coming soon)
      */
-    public void modify(String picture, float width, float height, float shiftX, float shiftY, float shiftZ)
+    public void modify(String picture, float width, float height, float shiftX, float shiftY, float shiftZ, boolean fitAABB)
     {
         this.setPicture(picture);
 
@@ -129,6 +135,8 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
         this.shiftX = shiftX;
         this.shiftY = shiftY;
         this.shiftZ = shiftZ;
+
+        this.fitAABB = fitAABB;
 
         this.updatePosition();
     }
@@ -204,20 +212,36 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
 
         if (this.facing.getAxis() == EnumFacing.Axis.X)
         {
+            if (this.fitAABB)
+            {
+                h = this.sizeH;
+                d = this.sizeW;
+            }
+
             w = 0.05F;
         }
         else if (this.facing.getAxis() == EnumFacing.Axis.Y)
         {
+            if (this.fitAABB)
+            {
+                w = this.sizeW;
+                d = this.sizeH;
+            }
+
             h = 0.05F;
         }
         else if (this.facing.getAxis() == EnumFacing.Axis.Z)
         {
+            if (this.fitAABB)
+            {
+                w = this.sizeW;
+                h = this.sizeH;
+            }
+
             d = 0.05F;
         }
 
         this.setEntityBoundingBox(new AxisAlignedBB(x - w / 2, y - h / 2, z - d / 2, x + w / 2, y + h / 2, z + d / 2));
-
-        System.out.println(this.worldObj.isRemote + " " + this.posX + " " + this.posY + " " + this.posZ);
     }
 
     /* Persisting and restoring this entity */
@@ -247,6 +271,8 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
             this.blockPos = new BlockPos(this.posX, this.posY, this.posZ);
         }
 
+        this.fitAABB = compound.getBoolean("FitAABB");
+
         this.updatePosition();
         this.notifyTrackers();
     }
@@ -273,6 +299,8 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
             compound.setInteger("BlockY", this.blockPos.getY());
             compound.setInteger("BlockZ", this.blockPos.getZ());
         }
+
+        compound.setBoolean("FitAABB", this.fitAABB);
     }
 
     /**
@@ -294,6 +322,8 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
 
         this.facing = EnumFacing.getFront(buffer.readByte());
         this.blockPos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+
+        this.fitAABB = buffer.readBoolean();
 
         this.updatePosition();
     }
@@ -320,5 +350,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
         buffer.writeInt(this.blockPos.getX());
         buffer.writeInt(this.blockPos.getY());
         buffer.writeInt(this.blockPos.getZ());
+
+        buffer.writeBoolean(this.fitAABB);
     }
 }
