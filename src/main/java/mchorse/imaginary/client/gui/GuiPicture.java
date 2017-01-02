@@ -126,10 +126,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.picker.w += 10;
         this.picker.h = this.height - 154 - 10;
 
-        int cap = (this.picker.w - 2) / 42;
-
-        this.picker.scrollHeight = this.picker.images.size() / cap * 42;
         this.picker.hidden = true;
+        this.picker.setupHeight();
     }
 
     @Override

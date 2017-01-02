@@ -5,8 +5,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
+
+import com.google.common.collect.ImmutableSet;
 
 import mchorse.imaginary.ClientProxy;
 import mchorse.imaginary.ImageUtils;
@@ -26,6 +29,8 @@ import net.minecraft.util.math.MathHelper;
  */
 public class GuiPictures extends GuiScrollPane
 {
+    private static final Set<String> EXTENTIONS = ImmutableSet.<String> of("gif", "png", "jpg", "jpeg");
+
     /* Other stuff */
     public List<ImageInfo> images = new ArrayList<ImageInfo>();
     public IPicturePicker listener;
@@ -51,23 +56,25 @@ public class GuiPictures extends GuiScrollPane
             String name = file.getName();
             String ext = FilenameUtils.getExtension(file.getName());
 
-            if (ext.equals("png") || ext.equals("gif") || ext.equals("jpeg") || ext.equals("jpg"))
+            if (!EXTENTIONS.contains(ext))
             {
-                try
-                {
-                    this.images.add(new ImageInfo(name, ImageUtils.getImageDimension(file)));
+                continue;
+            }
 
-                    if (name.equals(current))
-                    {
-                        this.selected = i;
-                    }
+            try
+            {
+                this.images.add(new ImageInfo(name, ImageUtils.getImageDimension(file)));
 
-                    i++;
-                }
-                catch (IOException e)
+                if (name.equals(current))
                 {
-                    e.printStackTrace();
+                    this.selected = i;
                 }
+
+                i++;
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
             }
         }
     }
@@ -156,7 +163,7 @@ public class GuiPictures extends GuiScrollPane
 
             int x = this.x + (i % cap) * 42 + 2;
             int y = this.y + (i / cap) * 42 + 2;
-
+            
             GlStateManager.color(1.0F, 1.0F, 1.0F, i == this.selected ? 0.5F : 1.0F);
             drawPicture(image, x, y, this.zLevel, 40, 40);
         }
@@ -202,6 +209,13 @@ public class GuiPictures extends GuiScrollPane
         buffer.pos(x, y, z).tex(0, 0).endVertex();
 
         tessellator.draw();
+    }
+
+    public void setupHeight()
+    {
+        int cap = (this.w - 2) / 42;
+
+        this.scrollHeight = ((this.images.size() / cap) + 1) * 42;
     }
 
     /**
