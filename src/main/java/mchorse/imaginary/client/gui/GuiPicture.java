@@ -104,7 +104,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.shiftZ = new GuiSlider(-1, this.width - 125, 150, "Z: ", -1, 1, this.oldShiftZ, this);
 
         this.save = new GuiButton(0, this.width - 125, this.height - 30, 115, 20, "Save");
-        this.pick = new GuiButton(1, 10, 132, 100, 20, "Pick picture...");
+        this.pick = new GuiButton(1, 10, this.height - 30, 100, 20, "Pick picture...");
         this.aspect = new GuiButton(2, this.width - 90, 4, 80, 20, "Keep Aspect");
         this.fit = new GuiButton(3, this.width - 125, 180, 115, 20, "");
 
@@ -126,12 +126,10 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.shiftX.width = this.shiftY.width = this.shiftZ.width = 115;
         this.shiftX.precision = this.shiftY.precision = this.shiftZ.precision = 2;
 
-        this.picker.x = 10;
-        this.picker.y = 154;
-        this.picker.w = ((this.width - 10) / 2);
-        this.picker.w -= this.picker.w % 42;
-        this.picker.w += 10;
-        this.picker.h = this.height - 154 - 10;
+        this.picker.x = 130;
+        this.picker.y = 10;
+        this.picker.w = this.width - 120 - 135 - 20;
+        this.picker.h = this.height - 20;
 
         this.picker.hidden = true;
         this.picker.setupHeight();
@@ -266,7 +264,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
-        Gui.drawRect(0, 0, this.width, this.height, 0x88000000);
+        Gui.drawRect(0, 0, 120, this.height, 0x88000000);
+        Gui.drawRect(this.width - 135, 0, this.width, this.height, 0x88000000);
         this.fontRendererObj.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
         this.fontRendererObj.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
         this.fontRendererObj.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
