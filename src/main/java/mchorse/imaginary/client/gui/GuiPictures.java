@@ -172,7 +172,7 @@ public class GuiPictures extends GuiScrollPane
                 opacity *= 0.5F;
             }
 
-            GlStateManager.color(1.0F, 1.0F, 1.0F, opacity);
+            GlStateManager.color(opacity, opacity, opacity, 1.0F);
             drawPicture(image, x, y, this.zLevel, 40, 40);
 
             if (isHovered)

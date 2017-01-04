@@ -1,5 +1,7 @@
 package mchorse.imaginary.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import mchorse.imaginary.ClientProxy;
 import mchorse.imaginary.entity.EntityImage;
 import net.minecraft.client.gui.Gui;
@@ -103,7 +105,7 @@ public class RenderImage extends Render<EntityImage>
 
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer vertexbuffer = tessellator.getBuffer();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
