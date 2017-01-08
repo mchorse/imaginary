@@ -1,4 +1,4 @@
-# Imaginary change log
+# Imaginary Change Log
 
 You totally see what I did there, didn't you? I should've called this mod Stickers, but Imaginary sounds much better!
 
