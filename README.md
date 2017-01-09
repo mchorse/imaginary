@@ -1,5 +1,7 @@
 ![Imaginary mod](http://i.imgur.com/Ar8Q54P.png)
 
+[Download latest version](https://github.com/mchorse/imaginary/releases/) – [PMC page](http://www.planetminecraft.com/mod/imaginary-3880799/) – [Minecraft Forum post](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2781863-imaginary-add-pictures-to-your-world)
+
 **Imaginary** – a Minecraft mod which gives an abilitiy to add images to Minecraft. This mod supports any formats that Minecraft supports for textures (**PNG**, **JPEG** and **GIF** without animations). This mod is built for Minecraft 1.10.2 and Forge 12.18.3.2185. No compatibility with multiplayer available yet (it's planned for next update, though).
 
 <!-- I didn't knew how to word it, but I meant of "reminding of mod." I had this idea since September of 2016, but didn't really needed this functionality for my machinimas -->
