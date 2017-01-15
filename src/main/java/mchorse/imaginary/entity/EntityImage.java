@@ -6,6 +6,7 @@ import mchorse.imaginary.network.Dispatcher;
 import mchorse.imaginary.network.common.PacketModifyImage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemNameTag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -73,8 +74,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     {
         super(worldIn);
 
-        this.height = 1.0F;
-        this.width = 1.0F;
+        this.setSize(1.0F, 1.0F);
     }
 
     /**
@@ -150,11 +150,22 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     }
 
     /**
-     * Just open the GUI for interaction 
+     * Process initial interact
+     * 
+     * This method is responsible for opening GUI interface and renaming this 
+     * entity if player holds a name tag.
      */
     @Override
     public boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand)
     {
+        /* Fuck EntityLivingBase! */
+        if (stack != null && stack.getItem() instanceof ItemNameTag && stack.hasDisplayName())
+        {
+            this.setCustomNameTag(stack.getDisplayName());
+
+            return true;
+        }
+
         GuiHandler.open(player, GuiHandler.PICTURE, this.getEntityId(), 0, 0);
 
         return true;
