@@ -32,6 +32,11 @@ public class ItemImage extends Item
     {
         if (!worldIn.isRemote)
         {
+            if (!playerIn.capabilities.isCreativeMode)
+            {
+                stack.stackSize--;
+            }
+
             EntityImage image = new EntityImage(worldIn);
 
             if (stack.hasTagCompound() && stack.getTagCompound().hasKey("ImageData", 10))
