@@ -2,9 +2,11 @@ package mchorse.imaginary.entity;
 
 import io.netty.buffer.ByteBuf;
 import mchorse.imaginary.GuiHandler;
+import mchorse.imaginary.Imaginary;
 import mchorse.imaginary.network.Dispatcher;
 import mchorse.imaginary.network.common.PacketModifyImage;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemNameTag;
 import net.minecraft.item.ItemStack;
@@ -112,9 +114,52 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
             {
                 this.setDead();
                 this.setBeenAttacked();
+
+                if (!source.isCreativePlayer())
+                {
+                    this.entityDropItem(new ItemStack(Imaginary.imageItem), 0.0F);
+                }
             }
 
             return true;
+        }
+    }
+
+    /**
+     * Drop entity item
+     * 
+     * This method overwrites (and copies) code from parent class so that it 
+     * would have correct position on spawn. Otherwise the item will stuck in 
+     * the wall and simply fly up and away.
+     */
+    @Override
+    public EntityItem entityDropItem(ItemStack stack, float offsetY)
+    {
+        if (stack.stackSize != 0 && stack.getItem() != null)
+        {
+            Vec3i vec = this.facing.getDirectionVec();
+
+            float x = this.blockPos.getX() + 0.5F + vec.getX();
+            float y = this.blockPos.getY() + 0.5F + vec.getY();
+            float z = this.blockPos.getZ() + 0.5F + vec.getZ();
+
+            EntityItem entityitem = new EntityItem(this.worldObj, x, y + (double) offsetY, z, stack);
+            entityitem.setDefaultPickupDelay();
+
+            if (captureDrops)
+            {
+                this.capturedDrops.add(entityitem);
+            }
+            else
+            {
+                this.worldObj.spawnEntityInWorld(entityitem);
+            }
+
+            return entityitem;
+        }
+        else
+        {
+            return null;
         }
     }
 
