@@ -3,6 +3,8 @@ package mchorse.imaginary;
 import mchorse.imaginary.entity.EntityImage;
 import mchorse.imaginary.item.ItemImage;
 import mchorse.imaginary.network.Dispatcher;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -29,8 +31,14 @@ public class CommonProxy
     }
 
     /**
-     * Looks like we don't need this method, but I'll leave it just in case. 
+     * Add a recipe for survival people 
      */
     public void load(FMLInitializationEvent event)
-    {}
+    {
+        ItemStack red = new ItemStack(Items.DYE, 1, 1);
+        ItemStack green = new ItemStack(Items.DYE, 1, 2);
+        ItemStack blue = new ItemStack(Items.DYE, 1, 12);
+
+        GameRegistry.addRecipe(new ItemStack(Imaginary.imageItem), "PRP", "PGP", "PBP", 'P', Items.PAPER, 'R', red, 'G', green, 'B', blue);
+    }
 }
