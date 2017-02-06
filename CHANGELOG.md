@@ -2,9 +2,22 @@
 
 You totally see what I did there, didn't you? I should've called this mod Stickers, but Imaginary sounds much better!
 
+## Version 1.0.2
+
+This is a quick patch update which mostly aims at making Imaginary mod more survival friendly.
+
+- Added recipe for making a *Picture* item ([recipe screenshot](http://i.imgur.com/2qAR3vd.png))
+- Added drop for *Image* entity (*Picture* item) in survival mode
+- Added stack size decrease for using *Picture* item in survival mode
+- Name tags can be used on *Image* entiies to name them
+
 ## Version 1.0.1
 
 This is a quick imaginary patch which fixes few bugs, adds little tweaks, some optimization and introduces a new property for the *Image* entity. 
+
+<a href="https://youtu.be/3JMUUav_8QA"> 
+    <img src="https://img.youtube.com/vi/3JMUUav_8QA/0.jpg">
+</a>
 
 - Added new *Image* entity property **Fit within AABB**
 - Changed a little bit **Imaginary Picture** GUI
