@@ -5,6 +5,7 @@ import mchorse.imaginary.item.ItemImage;
 import mchorse.imaginary.network.Dispatcher;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -26,7 +27,7 @@ public class CommonProxy
         Dispatcher.register();
         GameRegistry.register(Imaginary.imageItem = new ItemImage());
 
-        EntityRegistry.registerModEntity(EntityImage.class, "Image", 0, Imaginary.instance, 128, 5, false);
+        EntityRegistry.registerModEntity(new ResourceLocation("imaginary:Image"), EntityImage.class, "Image", 0, Imaginary.instance, 128, 5, false);
         NetworkRegistry.INSTANCE.registerGuiHandler(Imaginary.instance, new GuiHandler());
     }
 

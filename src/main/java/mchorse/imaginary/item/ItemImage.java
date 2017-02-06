@@ -28,13 +28,15 @@ public class ItemImage extends Item
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+        ItemStack stack = player.getHeldItem(hand);
+
         if (!worldIn.isRemote)
         {
-            if (!playerIn.capabilities.isCreativeMode)
+            if (!player.capabilities.isCreativeMode)
             {
-                stack.stackSize--;
+                stack.shrink(1);
             }
 
             EntityImage image = new EntityImage(worldIn);
@@ -65,7 +67,7 @@ public class ItemImage extends Item
 
             if (facing.getAxis() == Axis.Y)
             {
-                float rz = (float) Math.floor((-playerIn.rotationYaw + 180 + 45.0F) / 90.0F);
+                float rz = (float) Math.floor((-player.rotationYaw + 180 + 45.0F) / 90.0F);
 
                 image.rotationRoll = rz * 90;
             }
@@ -74,7 +76,7 @@ public class ItemImage extends Item
             image.rotationPitch = image.prevRotationPitch = ry;
             image.updatePosition();
 
-            worldIn.spawnEntityInWorld(image);
+            worldIn.spawnEntity(image);
         }
 
         return EnumActionResult.SUCCESS;

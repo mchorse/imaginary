@@ -110,7 +110,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
         }
         else
         {
-            if (!this.isDead && !this.worldObj.isRemote)
+            if (!this.isDead && !this.world.isRemote)
             {
                 this.setDead();
                 this.setBeenAttacked();
@@ -135,7 +135,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     @Override
     public EntityItem entityDropItem(ItemStack stack, float offsetY)
     {
-        if (stack.stackSize != 0 && stack.getItem() != null)
+        if (!stack.isEmpty() && stack.getItem() != null)
         {
             Vec3i vec = this.facing.getDirectionVec();
 
@@ -143,19 +143,19 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
             float y = this.blockPos.getY() + 0.5F + vec.getY();
             float z = this.blockPos.getZ() + 0.5F + vec.getZ();
 
-            EntityItem entityitem = new EntityItem(this.worldObj, x, y + (double) offsetY, z, stack);
-            entityitem.setDefaultPickupDelay();
+            EntityItem item = new EntityItem(this.world, x, y + (double) offsetY, z, stack);
+            item.setDefaultPickupDelay();
 
             if (captureDrops)
             {
-                this.capturedDrops.add(entityitem);
+                this.capturedDrops.add(item);
             }
             else
             {
-                this.worldObj.spawnEntityInWorld(entityitem);
+                this.world.spawnEntity(item);
             }
 
-            return entityitem;
+            return item;
         }
         else
         {
@@ -201,8 +201,10 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
      * entity if player holds a name tag.
      */
     @Override
-    public boolean processInitialInteract(EntityPlayer player, ItemStack stack, EnumHand hand)
+    public boolean processInitialInteract(EntityPlayer player, EnumHand hand)
     {
+        ItemStack stack = player.getHeldItem(hand);
+
         /* Fuck EntityLivingBase! */
         if (stack != null && stack.getItem() instanceof ItemNameTag && stack.hasDisplayName())
         {

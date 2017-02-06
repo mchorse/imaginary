@@ -134,7 +134,7 @@ public class GuiPictures extends GuiScrollPane
 
         int cap = (this.w - 2) / 42;
 
-        int x = MathHelper.clamp_int((mouseX - this.x - 2) / 42, 0, cap - 1);
+        int x = MathHelper.clamp((mouseX - this.x - 2) / 42, 0, cap - 1);
         int y = (mouseY + this.scrollY - this.y - 2) / 42;
 
         int index = x + y * cap;
@@ -158,7 +158,7 @@ public class GuiPictures extends GuiScrollPane
 
         int cap = (this.w - 2) / 42;
 
-        for (int i = this.scrollY / 42, c = MathHelper.clamp_int((this.scrollY + this.h + 42) / 42 * cap, 0, this.images.size()); i < c; i++)
+        for (int i = this.scrollY / 42, c = MathHelper.clamp((this.scrollY + this.h + 42) / 42 * cap, 0, this.images.size()); i < c; i++)
         {
             ImageInfo image = this.images.get(i);
 

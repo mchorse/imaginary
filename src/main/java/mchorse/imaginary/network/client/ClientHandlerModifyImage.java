@@ -9,7 +9,7 @@ public class ClientHandlerModifyImage extends ClientMessageHandler<PacketModifyI
     @Override
     public void run(EntityPlayerSP player, PacketModifyImage message)
     {
-        EntityImage image = (EntityImage) player.worldObj.getEntityByID(message.id);
+        EntityImage image = (EntityImage) player.world.getEntityByID(message.id);
 
         image.modify(message.picture, message.width, message.height, message.shiftX, message.shiftY, message.shiftZ, message.fitAABB);
     }
