@@ -37,7 +37,7 @@ public class CommonProxy
     {
         ItemStack red = new ItemStack(Items.DYE, 1, 1);
         ItemStack green = new ItemStack(Items.DYE, 1, 2);
-        ItemStack blue = new ItemStack(Items.DYE, 1, 12);
+        ItemStack blue = new ItemStack(Items.DYE, 1, 4);
 
         GameRegistry.addRecipe(new ItemStack(Imaginary.imageItem), "PRP", "PGP", "PBP", 'P', Items.PAPER, 'R', red, 'G', green, 'B', blue);
     }
