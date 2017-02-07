@@ -24,7 +24,7 @@ After you acquired a picture item, you should be able to place a custom picture 
 
 You can learn about imaginary mod from this video.
 
-<a href="https://youtu.be/3JMUUav_8QA"><img src="https://img.youtube.com/vi//0.jpg"></a> 
+<a href="https://youtu.be/3JMUUav_8QA"><img src="https://img.youtube.com/vi/3JMUUav_8QA/0.jpg"></a> 
 
 ## For reposters
 
