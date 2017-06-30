@@ -21,6 +21,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Entity image
@@ -191,7 +193,10 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
      */
     public void notifyTrackers()
     {
-        Dispatcher.sendToTracked(this, new PacketModifyImage(this));
+        if (!this.worldObj.isRemote)
+        {
+            Dispatcher.sendToTracked(this, new PacketModifyImage(this));
+        }
     }
 
     /**
@@ -230,6 +235,13 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
     public String getPicture()
     {
         return this.picture == null ? "" : this.picture.getResourcePath();
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getBrightnessForRender(float partialTicks)
+    {
+        return Imaginary.proxy.config.disable_lighting ? 15728880 : super.getBrightnessForRender(partialTicks);
     }
 
     /**

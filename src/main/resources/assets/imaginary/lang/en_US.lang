@@ -1,5 +1,9 @@
 #PARSE_ESCAPES
 
 entity.imaginary.Image.name=Image
+
 # Yes, I know that it should be named "Image", but I like name "Picture" more
 item.imaginary.image.name=Picture
+
+imaginary.config.disable_lighting = Disable lighting
+imaginary.config.enable_linear_filtering = Enable linear filter

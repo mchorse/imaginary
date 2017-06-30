@@ -3,11 +3,13 @@ package mchorse.imaginary.client.render;
 import org.lwjgl.opengl.GL11;
 
 import mchorse.imaginary.ClientProxy;
+import mchorse.imaginary.Imaginary;
 import mchorse.imaginary.entity.EntityImage;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPainting;
@@ -31,6 +33,15 @@ public class RenderImage extends Render<EntityImage>
     public RenderImage(RenderManager manager)
     {
         super(manager);
+    }
+
+    /**
+     * Should hopefully fix the problem with disappearing big pictures 
+     */
+    @Override
+    public boolean shouldRender(EntityImage livingEntity, ICamera camera, double camX, double camY, double camZ)
+    {
+        return true;
     }
 
     /**
@@ -63,6 +74,23 @@ public class RenderImage extends Render<EntityImage>
         GlStateManager.enableBlend();
         this.bindEntityTexture(entity);
 
+        /* Texture filtering, probably not the best idea */
+        if (Imaginary.proxy.config.enable_linear_filtering)
+        {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        }
+        else
+        {
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        }
+
+        if (Imaginary.proxy.config.disable_lighting)
+        {
+            GlStateManager.disableLighting();
+        }
+
         float f = 0.0625F;
 
         /* Render the image once */
@@ -76,6 +104,11 @@ public class RenderImage extends Render<EntityImage>
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+
+        if (Imaginary.proxy.config.disable_lighting)
+        {
+            GlStateManager.enableLighting();
+        }
     }
 
     /**
