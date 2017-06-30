@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
  * 
  * Animated GIFs are planned in the future.
  */
-@Mod(name = Imaginary.MODNAME, modid = Imaginary.MODID, version = Imaginary.VERSION)
+@Mod(name = Imaginary.MODNAME, modid = Imaginary.MODID, version = Imaginary.VERSION, guiFactory = Imaginary.GUI_FACTORY)
 public class Imaginary
 {
     public static final String MODNAME = "Imaginary";
@@ -24,6 +24,7 @@ public class Imaginary
 
     public static final String CLIENT_PROXY = "mchorse.imaginary.ClientProxy";
     public static final String SERVER_PROXY = "mchorse.imaginary.CommonProxy";
+    public static final String GUI_FACTORY = "mchorse.imaginary.config.gui.GuiFactory";
 
     @SidedProxy(clientSide = CLIENT_PROXY, serverSide = SERVER_PROXY)
     public static CommonProxy proxy;
