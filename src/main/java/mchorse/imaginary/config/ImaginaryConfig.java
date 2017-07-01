@@ -26,6 +26,11 @@ public class ImaginaryConfig
 
         this.disable_lighting = this.config.getBoolean("disable_lighting", cat, false, "Disables lighting (always yields white picture)", pre + "disable_lighting");
         this.enable_linear_filtering = this.config.getBoolean("enable_linear_filtering", cat, false, "Enables linear filtering of the pictures", pre + "enable_linear_filtering");
+
+        if (this.config.hasChanged())
+        {
+            this.config.save();
+        }
     }
 
     @SubscribeEvent
