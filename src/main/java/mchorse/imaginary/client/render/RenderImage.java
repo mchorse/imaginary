@@ -94,13 +94,13 @@ public class RenderImage extends Render<EntityImage>
 
         float f = 0.0625F;
 
-        /* Render the image once */
+        /* Render the back side */
         GlStateManager.scale(f, f, f);
-        this.renderImage(entity, false);
-
-        /* Render back side of the image */
-        GlStateManager.scale(-1.0F, 1.0F, 1.0F);
         this.renderImage(entity, true);
+
+        /* Render the front side of this image */
+        GlStateManager.scale(-1.0F, 1.0F, 1.0F);
+        this.renderImage(entity, false);
 
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
