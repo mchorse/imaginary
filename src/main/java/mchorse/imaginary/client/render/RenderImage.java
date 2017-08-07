@@ -72,6 +72,7 @@ public class RenderImage extends Render<EntityImage>
         GlStateManager.rotate(entity.rotationRoll, 0.0F, 0.0F, 1.0F);
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         this.bindEntityTexture(entity);
 
         /* Texture filtering, probably not the best idea */
@@ -95,11 +96,11 @@ public class RenderImage extends Render<EntityImage>
 
         /* Render the image once */
         GlStateManager.scale(f, f, f);
-        this.renderImage(entity);
+        this.renderImage(entity, false);
 
         /* Render back side of the image */
         GlStateManager.scale(-1.0F, 1.0F, 1.0F);
-        this.renderImage(entity);
+        this.renderImage(entity, true);
 
         GlStateManager.disableRescaleNormal();
         GlStateManager.disableBlend();
@@ -118,7 +119,7 @@ public class RenderImage extends Render<EntityImage>
      * maybe from {@link Gui#drawTexturedModalRect(int, int, int, int, int, int)},
      * I don't know.
      */
-    private void renderImage(EntityImage entity)
+    private void renderImage(EntityImage entity, boolean mirror)
     {
         float w = entity.sizeW * 16;
         float h = entity.sizeH * 16;
@@ -135,6 +136,14 @@ public class RenderImage extends Render<EntityImage>
 
         float ry = (float) Math.sin(entity.rotationPitch);
         float rz = (float) Math.cos(entity.rotationPitch + Math.PI);
+
+        if (mirror)
+        {
+            double tmp = u2;
+
+            u2 = u1;
+            u1 = tmp;
+        }
 
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer vertexbuffer = tessellator.getBuffer();
