@@ -6,9 +6,9 @@ import mchorse.imaginary.ClientProxy;
 import mchorse.imaginary.Imaginary;
 import mchorse.imaginary.entity.EntityImage;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.culling.ICamera;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -137,7 +137,7 @@ public class RenderImage extends Render<EntityImage>
         float rz = (float) Math.cos(entity.rotationPitch + Math.PI);
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        BufferBuilder vertexbuffer = tessellator.getBuffer();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);

@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"#R#",
+		"#G#",
+		"#B#"
+	],
+	"key": {
+		"#": {
+			"item": "minecraft:paper"
+		},
+		"R": {
+			"item": "minecraft:dye",
+			"data": 1
+		},
+		"G": {
+			"item": "minecraft:dye",
+			"data": 2
+		},
+		"B": {
+			"item": "minecraft:dye",
+			"data": 4
+		}
+	},
+	"result": {
+		"item": "imaginary:image"
+	}
+}

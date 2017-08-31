@@ -16,9 +16,9 @@ import mchorse.imaginary.ImageUtils;
 import mchorse.imaginary.client.render.RenderImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -30,7 +30,7 @@ import net.minecraft.util.math.MathHelper;
  */
 public class GuiPictures extends GuiScrollPane
 {
-    private static final Set<String> EXTENTIONS = ImmutableSet.<String> of("gif", "png", "jpg", "jpeg");
+    private static final Set<String> EXTENTIONS = ImmutableSet.<String>of("gif", "png", "jpg", "jpeg");
 
     /* Other stuff */
     public List<ImageInfo> images = new ArrayList<ImageInfo>();
@@ -216,7 +216,7 @@ public class GuiPictures extends GuiScrollPane
         }
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer buffer = tessellator.getBuffer();
+        BufferBuilder buffer = tessellator.getBuffer();
 
         buffer.begin(7, DefaultVertexFormats.POSITION_TEX);
         buffer.pos(x, y + height, z).tex(0, 1).endVertex();

@@ -96,8 +96,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         int w = 113;
 
         /* Initializing GUI fields */
-        this.sizeW = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 30, w, 18);
-        this.sizeH = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 55, w, 18);
+        this.sizeW = new GuiTextField(0, fontRenderer, this.width - 11 - w, 30, w, 18);
+        this.sizeH = new GuiTextField(0, fontRenderer, this.width - 11 - w, 55, w, 18);
 
         this.shiftX = new GuiSlider(-1, this.width - 125, 100, "X: ", -1, 1, this.oldShiftX, this);
         this.shiftY = new GuiSlider(-1, this.width - 125, 125, "Y: ", -1, 1, this.oldShiftY, this);
@@ -266,9 +266,9 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     {
         Gui.drawRect(0, 0, 120, this.height, 0x88000000);
         Gui.drawRect(this.width - 135, 0, this.width, this.height, 0x88000000);
-        this.fontRendererObj.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
-        this.fontRendererObj.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
-        this.fontRendererObj.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
+        this.fontRenderer.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
+        this.fontRenderer.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
+        this.fontRenderer.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
 
         /* Draw picture */
         Gui.drawRect(10, 30, 110, 130, 0xff000000);
@@ -279,8 +279,8 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.sizeW.drawTextBox();
         this.sizeH.drawTextBox();
 
-        this.fontRendererObj.drawStringWithShadow("Width", this.width - 39, 35, 0xff888888);
-        this.fontRendererObj.drawStringWithShadow("Height", this.width - 45, 60, 0xff888888);
+        this.fontRenderer.drawStringWithShadow("Width", this.width - 39, 35, 0xff888888);
+        this.fontRenderer.drawStringWithShadow("Height", this.width - 45, 60, 0xff888888);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
 

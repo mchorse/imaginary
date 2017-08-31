@@ -6,8 +6,6 @@ import mchorse.imaginary.config.ImaginaryConfig;
 import mchorse.imaginary.entity.EntityImage;
 import mchorse.imaginary.item.ItemImage;
 import mchorse.imaginary.network.Dispatcher;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -15,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 /**
  * Common imaginary proxy 
@@ -40,7 +38,7 @@ public class CommonProxy
     public void preLoad(FMLPreInitializationEvent event)
     {
         Dispatcher.register();
-        GameRegistry.register(Imaginary.imageItem = new ItemImage());
+        ForgeRegistries.ITEMS.register(Imaginary.imageItem = new ItemImage());
 
         /* Configuration */
         File config = new File(event.getModConfigurationDirectory(), "imaginary/config.cfg");
@@ -58,11 +56,5 @@ public class CommonProxy
      * Add a recipe for survival people 
      */
     public void load(FMLInitializationEvent event)
-    {
-        ItemStack red = new ItemStack(Items.DYE, 1, 1);
-        ItemStack green = new ItemStack(Items.DYE, 1, 2);
-        ItemStack blue = new ItemStack(Items.DYE, 1, 4);
-
-        GameRegistry.addRecipe(new ItemStack(Imaginary.imageItem), "PRP", "PGP", "PBP", 'P', Items.PAPER, 'R', red, 'G', green, 'B', blue);
-    }
+    {}
 }

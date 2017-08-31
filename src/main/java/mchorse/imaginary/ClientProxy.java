@@ -7,6 +7,7 @@ import java.util.List;
 import mchorse.imaginary.client.PicturePack;
 import mchorse.imaginary.client.render.RenderImage;
 import mchorse.imaginary.entity.EntityImage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraftforge.client.model.ModelLoader;
@@ -36,7 +37,6 @@ public class ClientProxy extends CommonProxy
         super.preLoad(event);
 
         ModelLoader.setCustomModelResourceLocation(Imaginary.imageItem, 0, new ModelResourceLocation("imaginary:image", "inventory"));
-
         RenderingRegistry.registerEntityRenderingHandler(EntityImage.class, new RenderImage.ImageFactory());
 
         this.injectResourcePack(event.getModConfigurationDirectory().toString());
@@ -62,6 +62,9 @@ public class ClientProxy extends CommonProxy
             List<IResourcePack> packs = (List<IResourcePack>) field.get(FMLClientHandler.instance());
             packs.add(picturesPack = new PicturePack(pictures));
             pictures.mkdirs();
+
+            /* sigh */
+            Minecraft.getMinecraft().refreshResources();
         }
         catch (Exception e)
         {

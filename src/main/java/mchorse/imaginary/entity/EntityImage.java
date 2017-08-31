@@ -241,9 +241,9 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
 
     @Override
     @SideOnly(Side.CLIENT)
-    public int getBrightnessForRender(float partialTicks)
+    public int getBrightnessForRender()
     {
-        return Imaginary.proxy.config.disable_lighting ? 15728880 : super.getBrightnessForRender(partialTicks);
+        return Imaginary.proxy.config.disable_lighting ? 15728880 : super.getBrightnessForRender();
     }
 
     /**
