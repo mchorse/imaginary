@@ -2,6 +2,17 @@
 
 You totally see what I did there, didn't you? I should've called this mod Stickers, but Imaginary sounds much better!
 
+## Version 1.0.3
+
+This is a small patch update. It was used in Aperture's teaser.
+
+- Added **config**
+- Added two config options
+	- **Disable image lighting** – discards lighting tinting based on direction of which image is facing
+	- **Enable linear filtering** – makes pictures render smoothly (instead of pixelized)
+- Fixes issue with The One Probe (finally)
+- Makes pictures render all the time
+
 ## Version 1.0.2
 
 This is a quick patch update which mostly aims at making Imaginary mod more survival friendly.

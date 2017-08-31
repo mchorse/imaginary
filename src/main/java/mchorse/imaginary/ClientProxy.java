@@ -36,7 +36,6 @@ public class ClientProxy extends CommonProxy
         super.preLoad(event);
 
         ModelLoader.setCustomModelResourceLocation(Imaginary.imageItem, 0, new ModelResourceLocation("imaginary:image", "inventory"));
-
         RenderingRegistry.registerEntityRenderingHandler(EntityImage.class, new RenderImage.ImageFactory());
 
         this.injectResourcePack(event.getModConfigurationDirectory().toString());
