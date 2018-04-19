@@ -3,6 +3,7 @@ package mchorse.imaginary.client.gui;
 import java.io.IOException;
 
 import mchorse.imaginary.client.gui.GuiPictures.ImageInfo;
+import mchorse.imaginary.client.gui.GuiTrackpad.ITrackpadListener;
 import mchorse.imaginary.entity.EntityImage;
 import mchorse.imaginary.network.Dispatcher;
 import mchorse.imaginary.network.common.PacketModifyImage;
@@ -12,15 +13,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraftforge.fml.client.config.GuiSlider;
-import net.minecraftforge.fml.client.config.GuiSlider.ISlider;
 
 /**
  * Picture configuration GUI 
  *
  * This GUI is responsible for configuring given image entity. 
  */
-public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
+public class GuiPicture extends GuiScreen implements IPicturePicker, ITrackpadListener
 {
     /* GUI text fields */
     public GuiButton save;
@@ -31,9 +30,13 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     public GuiTextField sizeW;
     public GuiTextField sizeH;
 
-    public GuiSlider shiftX;
-    public GuiSlider shiftY;
-    public GuiSlider shiftZ;
+    public GuiTrackpad shiftX;
+    public GuiTrackpad shiftY;
+    public GuiTrackpad shiftZ;
+
+    public GuiTrackpad rotateX;
+    public GuiTrackpad rotateY;
+    public GuiTrackpad rotateZ;
 
     public GuiPictures picker;
 
@@ -47,6 +50,9 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     public float oldShiftX;
     public float oldShiftY;
     public float oldShiftZ;
+    public float oldRX;
+    public float oldRY;
+    public float oldRZ;
     public boolean oldFitAABB;
 
     boolean keepAspect = true;
@@ -61,10 +67,42 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.oldShiftX = entity.shiftX;
         this.oldShiftY = entity.shiftY;
         this.oldShiftZ = entity.shiftZ;
+        this.oldRX = entity.rotationPitch;
+        this.oldRY = entity.rotationYaw;
+        this.oldRZ = entity.rotationRoll;
         this.oldFitAABB = entity.fitAABB;
 
         this.picker = new GuiPictures(this.oldPicture);
         this.picker.listener = this;
+    }
+
+    @Override
+    public void setTrackpadValue(GuiTrackpad trackpad, float value)
+    {
+        if (trackpad == this.rotateX)
+        {
+            this.entity.rotationPitch = this.entity.prevRotationPitch = value;
+        }
+        else if (trackpad == this.rotateY)
+        {
+            this.entity.rotationYaw = this.entity.prevRotationYaw = value;
+        }
+        else if (trackpad == this.rotateZ)
+        {
+            this.entity.rotationRoll = value;
+        }
+
+        if (trackpad == this.shiftX || trackpad == this.shiftY || trackpad == this.shiftZ)
+        {
+            this.entity.shiftX = this.shiftX.value;
+            this.entity.shiftY = this.shiftY.value;
+            this.entity.shiftZ = this.shiftZ.value;
+
+            this.entity.updatePosition();
+            this.entity.prevPosX = this.entity.lastTickPosX = this.entity.posX;
+            this.entity.prevPosY = this.entity.lastTickPosY = this.entity.posY;
+            this.entity.prevPosZ = this.entity.lastTickPosZ = this.entity.posZ;
+        }
     }
 
     @Override
@@ -78,19 +116,6 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
     }
 
     @Override
-    public void onChangeSliderValue(GuiSlider slider)
-    {
-        this.entity.shiftX = (float) this.shiftX.getValue();
-        this.entity.shiftY = (float) this.shiftY.getValue();
-        this.entity.shiftZ = (float) this.shiftZ.getValue();
-
-        this.entity.prevPosX = this.entity.lastTickPosX = this.entity.posX;
-        this.entity.prevPosY = this.entity.lastTickPosY = this.entity.posY;
-        this.entity.prevPosZ = this.entity.lastTickPosZ = this.entity.posZ;
-        this.entity.updatePosition();
-    }
-
-    @Override
     public void initGui()
     {
         int w = 113;
@@ -99,14 +124,26 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.sizeW = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 30, w, 18);
         this.sizeH = new GuiTextField(0, fontRendererObj, this.width - 11 - w, 55, w, 18);
 
-        this.shiftX = new GuiSlider(-1, this.width - 125, 100, "X: ", -1, 1, this.oldShiftX, this);
-        this.shiftY = new GuiSlider(-1, this.width - 125, 125, "Y: ", -1, 1, this.oldShiftY, this);
-        this.shiftZ = new GuiSlider(-1, this.width - 125, 150, "Z: ", -1, 1, this.oldShiftZ, this);
+        this.shiftX = new GuiTrackpad(this, this.fontRendererObj).setTitle("X").update(this.width - 125, 100, 115, 20);
+        this.shiftY = new GuiTrackpad(this, this.fontRendererObj).setTitle("Y").update(this.width - 125, 125, 115, 20);
+        this.shiftZ = new GuiTrackpad(this, this.fontRendererObj).setTitle("Z").update(this.width - 125, 150, 115, 20);
 
-        this.save = new GuiButton(0, this.width - 125, this.height - 30, 115, 20, "Save");
-        this.pick = new GuiButton(1, 10, this.height - 30, 100, 20, "Pick picture...");
+        this.shiftX.setValue(this.oldShiftX);
+        this.shiftY.setValue(this.oldShiftY);
+        this.shiftZ.setValue(this.oldShiftZ);
+
+        this.rotateX = new GuiTrackpad(this, this.fontRendererObj).setTitle("Pitch").update(this.width - 125, 195, w, 20);
+        this.rotateY = new GuiTrackpad(this, this.fontRendererObj).setTitle("Yaw").update(this.width - 125, 220, w, 20);
+        this.rotateZ = new GuiTrackpad(this, this.fontRendererObj).setTitle("Roll").update(this.width - 125, 245, w, 20);
+
+        this.rotateX.setValue(this.oldRX);
+        this.rotateY.setValue(this.oldRY);
+        this.rotateZ.setValue(this.oldRZ);
+
+        this.save = new GuiButton(0, 10, this.height - 30, 100, 20, "Save");
+        this.pick = new GuiButton(1, 10, this.height - 55, 100, 20, "Pick picture...");
         this.aspect = new GuiButton(2, this.width - 90, 4, 80, 20, "Keep Aspect");
-        this.fit = new GuiButton(3, this.width - 125, 180, 115, 20, "");
+        this.fit = new GuiButton(3, this.width - 125, 270, 115, 20, "");
 
         /* Adding buttons */
         this.buttonList.add(this.save);
@@ -114,17 +151,10 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.buttonList.add(this.aspect);
         this.buttonList.add(this.fit);
 
-        this.buttonList.add(this.shiftX);
-        this.buttonList.add(this.shiftY);
-        this.buttonList.add(this.shiftZ);
-
         /* Configuring up the fields */
         this.sizeW.setText(Float.toString(this.entity.sizeW));
         this.sizeH.setText(Float.toString(this.entity.sizeH));
         this.fit.displayString = this.entity.fitAABB ? "Fit within AABB: Yes" : "Fit within AABB: No";
-
-        this.shiftX.width = this.shiftY.width = this.shiftZ.width = 115;
-        this.shiftX.precision = this.shiftY.precision = this.shiftZ.precision = 2;
 
         this.picker.x = 130;
         this.picker.y = 10;
@@ -193,11 +223,21 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
             this.entity.shiftX = this.oldShiftX;
             this.entity.shiftY = this.oldShiftY;
             this.entity.shiftZ = this.oldShiftZ;
+            this.entity.rotationRoll = this.oldRZ;
+            this.entity.rotationPitch = this.entity.prevRotationPitch = this.oldRX;
+            this.entity.rotationYaw = this.entity.prevRotationYaw = this.oldRY;
             this.entity.fitAABB = this.oldFitAABB;
         }
 
         this.sizeW.textboxKeyTyped(typedChar, keyCode);
         this.sizeH.textboxKeyTyped(typedChar, keyCode);
+
+        this.rotateX.keyTyped(typedChar, keyCode);
+        this.rotateY.keyTyped(typedChar, keyCode);
+        this.rotateZ.keyTyped(typedChar, keyCode);
+        this.shiftX.keyTyped(typedChar, keyCode);
+        this.shiftY.keyTyped(typedChar, keyCode);
+        this.shiftZ.keyTyped(typedChar, keyCode);
 
         if (this.sizeW.isFocused())
         {
@@ -251,6 +291,29 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
 
             this.sizeW.mouseClicked(mouseX, mouseY, mouseButton);
             this.sizeH.mouseClicked(mouseX, mouseY, mouseButton);
+
+            this.rotateX.mouseClicked(mouseX, mouseY, mouseButton);
+            this.rotateY.mouseClicked(mouseX, mouseY, mouseButton);
+            this.rotateZ.mouseClicked(mouseX, mouseY, mouseButton);
+            this.shiftX.mouseClicked(mouseX, mouseY, mouseButton);
+            this.shiftY.mouseClicked(mouseX, mouseY, mouseButton);
+            this.shiftZ.mouseClicked(mouseX, mouseY, mouseButton);
+        }
+    }
+
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state)
+    {
+        if (!this.picker.isInside(mouseX, mouseY))
+        {
+            super.mouseReleased(mouseX, mouseY, state);
+
+            this.rotateX.mouseReleased(mouseX, mouseY, state);
+            this.rotateY.mouseReleased(mouseX, mouseY, state);
+            this.rotateZ.mouseReleased(mouseX, mouseY, state);
+            this.shiftX.mouseReleased(mouseX, mouseY, state);
+            this.shiftY.mouseReleased(mouseX, mouseY, state);
+            this.shiftZ.mouseReleased(mouseX, mouseY, state);
         }
     }
 
@@ -269,6 +332,7 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.fontRendererObj.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
         this.fontRendererObj.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
         this.fontRendererObj.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
+        this.fontRendererObj.drawStringWithShadow("Rotation", this.width - 120, 180, 0xffffffff);
 
         /* Draw picture */
         Gui.drawRect(10, 30, 110, 130, 0xff000000);
@@ -283,6 +347,12 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ISlider
         this.fontRendererObj.drawStringWithShadow("Height", this.width - 45, 60, 0xff888888);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
+        this.rotateX.draw(mouseX, mouseY, partialTicks);
+        this.rotateY.draw(mouseX, mouseY, partialTicks);
+        this.rotateZ.draw(mouseX, mouseY, partialTicks);
+        this.shiftX.draw(mouseX, mouseY, partialTicks);
+        this.shiftY.draw(mouseX, mouseY, partialTicks);
+        this.shiftZ.draw(mouseX, mouseY, partialTicks);
 
         /* Draw picker */
         this.picker.drawScreen(mouseX, mouseY, partialTicks);
