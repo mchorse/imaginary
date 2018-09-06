@@ -124,17 +124,17 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ITrackpadLi
         this.sizeW = new GuiTextField(0, fontRenderer, this.width - 11 - w, 30, w, 18);
         this.sizeH = new GuiTextField(0, fontRenderer, this.width - 11 - w, 55, w, 18);
 
-        this.shiftX = new GuiTrackpad(this, this.fontRendererObj).setTitle("X").update(this.width - 125, 100, 115, 20);
-        this.shiftY = new GuiTrackpad(this, this.fontRendererObj).setTitle("Y").update(this.width - 125, 125, 115, 20);
-        this.shiftZ = new GuiTrackpad(this, this.fontRendererObj).setTitle("Z").update(this.width - 125, 150, 115, 20);
+        this.shiftX = new GuiTrackpad(this, this.fontRenderer).setTitle("X").update(this.width - 125, 100, 115, 20);
+        this.shiftY = new GuiTrackpad(this, this.fontRenderer).setTitle("Y").update(this.width - 125, 125, 115, 20);
+        this.shiftZ = new GuiTrackpad(this, this.fontRenderer).setTitle("Z").update(this.width - 125, 150, 115, 20);
 
         this.shiftX.setValue(this.oldShiftX);
         this.shiftY.setValue(this.oldShiftY);
         this.shiftZ.setValue(this.oldShiftZ);
 
-        this.rotateX = new GuiTrackpad(this, this.fontRendererObj).setTitle("Pitch").update(this.width - 125, 195, w, 20);
-        this.rotateY = new GuiTrackpad(this, this.fontRendererObj).setTitle("Yaw").update(this.width - 125, 220, w, 20);
-        this.rotateZ = new GuiTrackpad(this, this.fontRendererObj).setTitle("Roll").update(this.width - 125, 245, w, 20);
+        this.rotateX = new GuiTrackpad(this, this.fontRenderer).setTitle("Pitch").update(this.width - 125, 195, w, 20);
+        this.rotateY = new GuiTrackpad(this, this.fontRenderer).setTitle("Yaw").update(this.width - 125, 220, w, 20);
+        this.rotateZ = new GuiTrackpad(this, this.fontRenderer).setTitle("Roll").update(this.width - 125, 245, w, 20);
 
         this.rotateX.setValue(this.oldRX);
         this.rotateY.setValue(this.oldRY);
@@ -329,16 +329,11 @@ public class GuiPicture extends GuiScreen implements IPicturePicker, ITrackpadLi
     {
         Gui.drawRect(0, 0, 120, this.height, 0x88000000);
         Gui.drawRect(this.width - 135, 0, this.width, this.height, 0x88000000);
-<<<<<<< HEAD
+
         this.fontRenderer.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
         this.fontRenderer.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
         this.fontRenderer.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
-=======
-        this.fontRendererObj.drawStringWithShadow("Imaginary Picture", 10, 10, 0xffffffff);
-        this.fontRendererObj.drawStringWithShadow("Size", this.width - 120, 10, 0xffffffff);
-        this.fontRendererObj.drawStringWithShadow("Shifting", this.width - 120, 85, 0xffffffff);
-        this.fontRendererObj.drawStringWithShadow("Rotation", this.width - 120, 180, 0xffffffff);
->>>>>>> 1.11
+        this.fontRenderer.drawStringWithShadow("Rotation", this.width - 120, 180, 0xffffffff);
 
         /* Draw picture */
         Gui.drawRect(10, 30, 110, 130, 0xff000000);
