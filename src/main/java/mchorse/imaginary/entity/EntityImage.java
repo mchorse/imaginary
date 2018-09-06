@@ -115,7 +115,7 @@ public class EntityImage extends Entity implements IEntityAdditionalSpawnData
             if (!this.isDead && !this.world.isRemote)
             {
                 this.setDead();
-                this.setBeenAttacked();
+                this.markVelocityChanged();
 
                 if (!source.isCreativePlayer())
                 {
