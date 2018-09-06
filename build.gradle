@@ -1,18 +1,34 @@
-buildscript {
-    repositories {
+buildscript 
+{
+    repositories 
+    {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
     }
+<<<<<<< HEAD
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
+=======
+    
+    dependencies 
+    {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+    }
+}
+
+>>>>>>> 1.11
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0.3"
-group= "mchorse.imaginary" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "mchorse.imaginary"
 archivesBaseName = "imaginary"
+sourceCompatibility = targetCompatibility = "1.8"
 
+<<<<<<< HEAD
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
@@ -20,8 +36,22 @@ compileJava {
 
 minecraft {
     version = "1.12.2-14.23.3.2655"
+=======
+compileJava 
+{
+    sourceCompatibility = targetCompatibility = "1.8"
+}
+
+/* Minecraft configuration */
+
+minecraft 
+{
+    version = "${mc_version}-${forge_version}"
+>>>>>>> 1.11
     runDir = "run"
+    mappings = snapshot
     
+<<<<<<< HEAD
     // the mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   snapshot are built nightly.
     // stable_#            stables are built at the discretion of the MCP team.
@@ -56,24 +86,36 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+=======
+    clientJvmArgs = ["-Xmx1G"]
+    serverJvmArgs = ["-Xmx1G"]
+    
+    replace "@VERSION@", project.version
+>>>>>>> 1.11
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
+processResources
+{
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
-    project.version += "-" + project.minecraft.version
+	project.version += "-" + project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
+<<<<<<< HEAD
 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
     }
 
     // copy everything else except the mcmod.info
+=======
+                
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+>>>>>>> 1.11
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }

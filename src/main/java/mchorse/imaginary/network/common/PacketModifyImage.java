@@ -18,30 +18,33 @@ public class PacketModifyImage implements IMessage
     public float shiftY;
     public float shiftZ;
 
+    public float rotateX;
+    public float rotateY;
+    public float rotateZ;
+
     public boolean fitAABB;
 
     public PacketModifyImage()
     {}
 
-    public PacketModifyImage(int id, String picture, float width, float height, float shiftX, float shiftY, float shiftZ, boolean fitAABB)
-    {
-        this.id = id;
-
-        this.picture = picture;
-
-        this.width = width;
-        this.height = height;
-
-        this.shiftX = shiftX;
-        this.shiftY = shiftY;
-        this.shiftZ = shiftZ;
-
-        this.fitAABB = fitAABB;
-    }
-
     public PacketModifyImage(EntityImage image)
     {
-        this(image.getEntityId(), image.getPicture(), image.sizeW, image.sizeH, image.shiftX, image.shiftY, image.shiftZ, image.fitAABB);
+        this.id = image.getEntityId();
+
+        this.picture = image.getPicture();
+
+        this.width = image.sizeW;
+        this.height = image.sizeH;
+
+        this.shiftX = image.shiftX;
+        this.shiftY = image.shiftY;
+        this.shiftZ = image.shiftZ;
+
+        this.rotateX = image.rotationPitch;
+        this.rotateY = image.rotationYaw;
+        this.rotateZ = image.rotationRoll;
+
+        this.fitAABB = image.fitAABB;
     }
 
     @Override
@@ -54,6 +57,9 @@ public class PacketModifyImage implements IMessage
         this.shiftX = buf.readFloat();
         this.shiftY = buf.readFloat();
         this.shiftZ = buf.readFloat();
+        this.rotateX = buf.readFloat();
+        this.rotateY = buf.readFloat();
+        this.rotateZ = buf.readFloat();
         this.fitAABB = buf.readBoolean();
     }
 
@@ -67,6 +73,9 @@ public class PacketModifyImage implements IMessage
         buf.writeFloat(this.shiftX);
         buf.writeFloat(this.shiftY);
         buf.writeFloat(this.shiftZ);
+        buf.writeFloat(this.rotateX);
+        buf.writeFloat(this.rotateY);
+        buf.writeFloat(this.rotateZ);
         buf.writeBoolean(this.fitAABB);
     }
 }
